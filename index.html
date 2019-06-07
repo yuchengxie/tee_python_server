@@ -1,0 +1,58 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <!-- <script src="./bootstrap/js/jQuery.min.js"></script> -->
+    <script src="./bootstrap/js/popper.js"></script>
+    <script src="./bootstrap/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="./bootstrap/css/bootstrap.css">
+    <title>nbc-wallet</title>
+</head>
+
+<body>
+    <div class="container my-3">
+        <div class="input-group mb-3">
+            <input type="text" id="input_pin" class="form-control" placeholder="请输入密码" aria-label="Recipient's username"
+                aria-describedby="basic-addon2">
+            <div class="input-group-append">
+                <button class="btn btn-outline-secondary" type="button" id='btn_getpass'
+                    onclick="getpass()">验证密码</button>
+            </div>
+        </div>
+
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <button class="btn btn-outline-info" type="button" id='btn_sign' onclick="sign()">获取签名</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    let WEB_SERVER = 'http://127.0.0.1:3000';
+    function hello() {
+        $.get(WEB_SERVER, function (data, status) {
+            console.log('data:', data);
+        })
+    }
+
+    function getpass() {
+        var pwd = $('#input_pin').val();
+        let params = { 'pass': pwd };
+        $.post('http://127.0.0.1:3000/getpass', params, function (data, status) {
+            alert(data);
+        });
+    }
+
+    function sign() {
+        let params = { 'payload': '123', 'pincode': '000000' };
+        $.post('http://127.0.0.1:3000/sign', params, function (data, status) {
+            alert(data);
+        });
+    }
+</script>
