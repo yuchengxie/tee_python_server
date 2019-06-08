@@ -16,6 +16,7 @@ import os
 import time
 import struct
 import traceback
+import json
 from threading import Timer
 from binascii import hexlify, unhexlify
 
@@ -41,6 +42,9 @@ gExpectedAtr = toBytes("3B9F 00 801F038031E073FE211367 00 434F537EC101 00")
 gExpectedMask = toBytes("FFFF 00 FFFFFFFFFFFFFFFFFFFFFF 00 FFFFFFFFFFFF 00")
 
 gLastErrCode = '9000'
+
+SUCCESS = 1
+FAILED = 0
 
 
 def ORD(ch):   # compatible to python3
@@ -431,17 +435,30 @@ class WalletApp(object):
                     sDesc = 'Total unspent: %s' % (fine_print(total),)
                     if len(msg.found) == msg.search:    # meet limit, should have more UTXO
                         sDesc += ' (not search all yet)'
-
-                    print('Public address: %s' % (account2,))
-                    print(sDesc)
-                    print('List of (uock,height,value):' +
-                          ('' if msg.found else ' none'))
+                    # print('Public address: %s' % (account2,))
+                    # print(sDesc)
+                    # print('List of (uock,height,value):' +
+                    #       ('' if msg.found else ' none'))
+                    # for u in msg.found:
+                    #     print('  %016x, %10s, %14s' %
+                    #           (u.uock, u.height, fine_print(u.value)))
+                    # print('')
+                    info = {}
+                    info['address'] = account2
+                    info['total'] = total
+                    info['founds'] = []
                     for u in msg.found:
-                        print('  %016x, %10s, %14s' %
-                              (u.uock, u.height, fine_print(u.value)))
-                    print('')
+                        found = {}
+                        found['uock'] = '%016x' % u.uock
+                        found['height'] = u.height
+                        found['value'] = u.value
+                        info['founds'].append(found)
+                    info['status'] = SUCCESS
+                    print('info:', info)
+                    return info
+
         else:
-            print(self.failed_desc(r))
+            return {'msg': self.failed_desc(r), 'status': FAILED}
 
     def block_state(self, block_hash, heights=None):  # block_hash should be str or None
         if block_hash:
@@ -517,7 +534,7 @@ def hello():
     return 'hello TEE'
 
 
-@app.route('/info', methods=['GET'])
+@app.route('/info', methods=['POST'])
 def info():
     if not checkPseudoWallet():
         print('TEE wallet not ready yet!')
@@ -529,8 +546,8 @@ def info():
 
     app = WalletApp(gPseudoWallet, gPseudoWallet._vcn)
     app.WEB_SERVER_ADDR = curr_coin.WEB_SERVER_ADDR
-    app.account_state(uockAfter, uockBefore)
-    return 'info'
+    info = app.account_state(uockAfter, uockBefore)
+    return json.dumps(info)
 
 
 if __name__ == "__main__":
