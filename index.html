@@ -34,6 +34,14 @@
 </html>
 
 <script>
+
+    // window.addEventListener('online', function () {
+    //     alert("onLine");
+    // });
+    // window.addEventListener('offline', function () {
+    //     alert("offLine");
+    // });
+
     let WEB_SERVER = 'http://127.0.0.1:3000';
     function hello() {
         $.get(WEB_SERVER, function (data, status) {
@@ -44,9 +52,27 @@
     function getpass() {
         var pwd = $('#input_pin').val();
         let params = { 'pass': pwd };
-        $.post('http://127.0.0.1:3000/getpass', params, function (data, status) {
-            alert(data);
-        });
+        $.ajax({
+            url: 'http://127.0.0.1:3000/getpass',
+            data: params,
+            type: 'POST',
+            success: function (res) {
+                alert(res);
+            },
+            error: function (error) {
+                alert(error);
+            }
+        })
+        // var pwd = $('#input_pin').val();
+        // let params = { 'pass': pwd };
+        // $.post('http://127.0.0.1:3000/getpass', params, function (data, status) {
+        //     console.log('status:',status);
+        //     if(status){
+        //         alert(data);
+        //     }else{
+        //         alert('disconnect');
+        //     }
+        // });
     }
 
     function sign() {
