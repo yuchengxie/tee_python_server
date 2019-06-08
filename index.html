@@ -19,18 +19,23 @@
                 aria-describedby="basic-addon2">
             <div class="input-group-append">
                 <button class="btn btn-outline-secondary" type="button" id='btn_getpass'
-                    onclick="getpass()">验证密码</button>
+                    onclick="verify_pin()">验证密码</button>
             </div>
         </div>
 
         <div class="input-group mb-3">
             <div class="input-group-append">
-                <button class="btn btn-outline-info" type="button" id='btn_sign' onclick="sign()">获取签名</button>
+                <button class="btn btn-outline-info" type="button" id='btn_sign' onclick="get_sign()">获取签名</button>
             </div>
         </div>
         <div class="input-group mb-3">
             <div class="input-group-append">
                 <button class="btn btn-outline-info" type="button" id='btn_info' onclick="get_info()">获取账户信息</button>
+            </div>
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <button class="btn btn-outline-info" type="button" id='btn_block' onclick="get_block()">获取区块</button>
             </div>
         </div>
     </div>
